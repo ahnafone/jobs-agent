@@ -1,0 +1,14 @@
+[Unit]
+Description=Applications board (jobs kanban web app, localhost only)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/.hermes/board
+ExecStart=/usr/bin/python3 -I %h/.hermes/board/jobs_board.py --host 127.0.0.1 --port 8765
+Environment=PATH=%h/.local/bin:/usr/local/bin:/usr/bin:/bin
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

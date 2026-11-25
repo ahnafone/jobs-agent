@@ -1,0 +1,846 @@
+{
+ "state": {
+  "today": "2026-11-25",
+  "now": 1795629313,
+  "cards": [
+   {
+    "code": "DF18",
+    "id": "t_de8adf18",
+    "title": "Junior Web Developer",
+    "company": "Northwind Apps",
+    "stage": "interview",
+    "fit": 86,
+    "fitReason": "React and Node match your projects; hybrid in Vancouver.",
+    "workStyle": "",
+    "city": "Vancouver, BC",
+    "location": "Vancouver, BC",
+    "pay": "CAD 68-76K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-13",
+    "appliedOn": "2026-11-15",
+    "source": "Email",
+    "url": "https://careers.example/northwind-apps/junior-web-developer",
+    "summary": "Build customer-facing features for a booking platform.",
+    "description": [
+     "Build customer-facing features for a booking platform."
+    ],
+    "requirements": [
+     "1+ year with React",
+     "Node.js",
+     "REST APIs",
+     "SQL"
+    ],
+    "responses": [
+     {
+      "date": "2026-11-21",
+      "type": "interview",
+      "note": "Phone screen with the hiring manager",
+      "deadline": "2026-11-28",
+      "byYou": true
+     }
+    ],
+    "notes": [
+     {
+      "date": "2026-11-25",
+      "text": "Recruiter said the team uses React and Node. Ask about hybrid days."
+     }
+    ],
+    "timeline": [
+     {
+      "date": "2026-11-13",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-15",
+      "label": "Applied",
+      "by": ""
+     },
+     {
+      "date": "2026-11-21",
+      "label": "Interview: Phone screen with the hiring manager (by 2026-11-28)",
+      "by": "you"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "0554",
+    "id": "t_3cb90554",
+    "title": "QA Analyst",
+    "company": "Lumen Health Tech",
+    "stage": "interview",
+    "fit": 78,
+    "fitReason": "Test automation and API testing are in your profile.",
+    "workStyle": "",
+    "city": "Burnaby, BC",
+    "location": "Burnaby, BC",
+    "pay": "CAD 62-70K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-14",
+    "appliedOn": "2026-11-16",
+    "source": "Email",
+    "url": "https://careers.example/lumen-health-tech/qa-analyst",
+    "summary": "Own regression testing for a clinic scheduling product.",
+    "description": [
+     "Own regression testing for a clinic scheduling product."
+    ],
+    "requirements": [
+     "Test plans",
+     "Postman or similar",
+     "basic SQL",
+     "Jira"
+    ],
+    "responses": [
+     {
+      "date": "2026-11-17",
+      "type": "info",
+      "note": "Recruiter asked for availability",
+      "deadline": "",
+      "byYou": true
+     },
+     {
+      "date": "2026-11-23",
+      "type": "assessment",
+      "note": "Take-home API testing task",
+      "deadline": "2026-11-27",
+      "byYou": true
+     }
+    ],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-14",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-16",
+      "label": "Applied",
+      "by": ""
+     },
+     {
+      "date": "2026-11-17",
+      "label": "Info request: Recruiter asked for availability",
+      "by": "you"
+     },
+     {
+      "date": "2026-11-23",
+      "label": "Assessment: Take-home API testing task (by 2026-11-27)",
+      "by": "you"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "E8ED",
+    "id": "t_790ae8ed",
+    "title": "Software Developer I",
+    "company": "Cedar Logistics",
+    "stage": "applied",
+    "fit": 82,
+    "fitReason": "Remote in Canada; Python and cloud basics fit.",
+    "workStyle": "Remote",
+    "city": "Canada",
+    "location": "Remote, Canada",
+    "pay": "CAD 70-80K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-16",
+    "appliedOn": "2026-11-18",
+    "source": "Chat link",
+    "url": "https://careers.example/cedar-logistics/software-developer-i",
+    "summary": "Work on route-planning services in Python and AWS.",
+    "description": [
+     "Work on route-planning services in Python and AWS."
+    ],
+    "requirements": [
+     "Python",
+     "REST APIs",
+     "Git",
+     "AWS basics"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-16",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-18",
+      "label": "Applied",
+      "by": ""
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "FB62",
+    "id": "t_4c61fb62",
+    "title": "IT Support Specialist",
+    "company": "Harbourline Credit Union",
+    "stage": "rejected",
+    "fit": 70,
+    "fitReason": "Close to home; help desk plus light scripting.",
+    "workStyle": "",
+    "city": "Surrey, BC",
+    "location": "Surrey, BC",
+    "pay": "CAD 58-64K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-17",
+    "appliedOn": "2026-11-19",
+    "source": "Email",
+    "url": "https://careers.example/harbourline-credit-union/it-support-specialist",
+    "summary": "First-line support for branch staff and member kiosks.",
+    "description": [
+     "First-line support for branch staff and member kiosks."
+    ],
+    "requirements": [
+     "Help desk",
+     "Windows and macOS",
+     "ticketing",
+     "customer service"
+    ],
+    "responses": [
+     {
+      "date": "2026-11-24",
+      "type": "rejection",
+      "note": "Went with another candidate",
+      "deadline": "",
+      "byYou": true
+     }
+    ],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-17",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-19",
+      "label": "Applied",
+      "by": ""
+     },
+     {
+      "date": "2026-11-24",
+      "label": "Rejection: Went with another candidate",
+      "by": "you"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "4A1B",
+    "id": "t_414d4a1b",
+    "title": "Full Stack Developer",
+    "company": "Pinecone Studio",
+    "stage": "applied",
+    "fit": 88,
+    "fitReason": "Angular, Node and Firebase are all in your stack.",
+    "workStyle": "",
+    "city": "Vancouver, BC",
+    "location": "Vancouver, BC",
+    "pay": "CAD 72-82K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-18",
+    "appliedOn": "2026-11-22",
+    "source": "Chat link",
+    "url": "https://careers.example/pinecone-studio/full-stack-developer",
+    "summary": "Small team shipping a recipe-planning app.",
+    "description": [
+     "Small team shipping a recipe-planning app."
+    ],
+    "requirements": [
+     "Angular or React",
+     "Node.js",
+     "Firebase or SQL",
+     "Git"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-18",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-22",
+      "label": "Applied",
+      "by": ""
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "8364",
+    "id": "t_7eb68364",
+    "title": "Technical Support Analyst",
+    "company": "Brightpath Software",
+    "stage": "parked",
+    "fit": 74,
+    "fitReason": "Remote; troubleshooting and API knowledge help.",
+    "workStyle": "Remote",
+    "city": "Canada",
+    "location": "Remote, Canada",
+    "pay": "CAD 60-68K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-19",
+    "appliedOn": "",
+    "source": "Email",
+    "url": "https://careers.example/brightpath-software/technical-support-analyst",
+    "summary": "Second-line support for a payroll SaaS.",
+    "description": [
+     "Second-line support for a payroll SaaS."
+    ],
+    "requirements": [
+     "Troubleshooting",
+     "SQL",
+     "REST",
+     "written communication"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-19",
+      "label": "Added to the board",
+      "by": "assistant"
+     },
+     {
+      "date": "2026-11-20",
+      "label": "Moved to Not for me (Pay is below the target range)",
+      "by": "you"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "Pay is below the target range",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "B689",
+    "id": "t_46beb689",
+    "title": "Junior Backend Developer",
+    "company": "Orca Payments",
+    "stage": "new",
+    "fit": 80,
+    "fitReason": "Node and SQL match; fintech is a stretch but fine.",
+    "workStyle": "",
+    "city": "Vancouver, BC",
+    "location": "Vancouver, BC",
+    "pay": "CAD 70-78K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-20",
+    "appliedOn": "",
+    "source": "Pasted link",
+    "url": "https://careers.example/orca-payments/junior-backend-developer",
+    "summary": "Build internal APIs for merchant onboarding.",
+    "description": [
+     "Build internal APIs for merchant onboarding."
+    ],
+    "requirements": [
+     "Node.js or Python",
+     "SQL",
+     "REST",
+     "unit testing"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-20",
+      "label": "Added to the board",
+      "by": "you"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "4638",
+    "id": "t_f5464638",
+    "title": "Automation Engineer (QA)",
+    "company": "Tidewater Robotics",
+    "stage": "new",
+    "fit": 76,
+    "fitReason": "Automation and CI experience fit; on-site 3 days.",
+    "workStyle": "",
+    "city": "Richmond, BC",
+    "location": "Richmond, BC",
+    "pay": "CAD 66-74K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-21",
+    "appliedOn": "",
+    "source": "Email",
+    "url": "https://careers.example/tidewater-robotics/automation-engineer-(qa)",
+    "summary": "Write test automation for warehouse robot software.",
+    "description": [
+     "Write test automation for warehouse robot software."
+    ],
+    "requirements": [
+     "Python or JS",
+     "CI/CD",
+     "test frameworks",
+     "Linux"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-21",
+      "label": "Added to the board",
+      "by": "assistant"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "D634",
+    "id": "t_96d2d634",
+    "title": "Web Developer",
+    "company": "Maple Leaf Outdoors",
+    "stage": "new",
+    "fit": 72,
+    "fitReason": "Surrey on-site; WordPress and JS.",
+    "workStyle": "",
+    "city": "Surrey, BC",
+    "location": "Surrey, BC",
+    "pay": "CAD 64-72K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-22",
+    "appliedOn": "",
+    "source": "Chat link",
+    "url": "https://careers.example/maple-leaf-outdoors/web-developer",
+    "summary": "Maintain an e-commerce site and build landing pages.",
+    "description": [
+     "Maintain an e-commerce site and build landing pages."
+    ],
+    "requirements": [
+     "JavaScript",
+     "PHP or WordPress",
+     "HTML/CSS",
+     "Git"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-22",
+      "label": "Added to the board",
+      "by": "assistant"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   },
+   {
+    "code": "4371",
+    "id": "t_063c4371",
+    "title": "Support Engineer",
+    "company": "Quillstone Data",
+    "stage": "new",
+    "fit": 69,
+    "fitReason": "Remote support role with SQL and API work.",
+    "workStyle": "Remote",
+    "city": "Canada",
+    "location": "Remote, Canada",
+    "pay": "CAD 65-72K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-23",
+    "appliedOn": "",
+    "source": "Email",
+    "url": "https://careers.example/quillstone-data/support-engineer",
+    "summary": "Help customers debug integrations with a reporting API.",
+    "description": [
+     "Help customers debug integrations with a reporting API."
+    ],
+    "requirements": [
+     "SQL",
+     "REST",
+     "Postman",
+     "clear writing"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-23",
+      "label": "Added to the board",
+      "by": "assistant"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": []
+   }
+  ],
+  "inbox": [
+   {
+    "code": "56DC",
+    "id": "t_004056dc",
+    "title": "Frontend Developer",
+    "company": "Sparrow Fintech",
+    "stage": "new",
+    "fit": 81,
+    "fitReason": "Angular and TypeScript match; hybrid.",
+    "workStyle": "",
+    "city": "Vancouver, BC",
+    "location": "Vancouver, BC",
+    "pay": "CAD 70-80K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-24",
+    "appliedOn": "",
+    "source": "Email",
+    "url": "https://careers.example/sparrow-fintech/frontend-developer",
+    "summary": "Build dashboards for small-business accounting.",
+    "description": [
+     "Build dashboards for small-business accounting."
+    ],
+    "requirements": [
+     "TypeScript",
+     "Angular or React",
+     "REST"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-24",
+      "label": "Added to the board",
+      "by": "assistant"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": [],
+    "eligible": true,
+    "eligibility": "Passes your checks",
+    "found": "found by email on 2026-11-25"
+   },
+   {
+    "code": "B124",
+    "id": "t_9ceab124",
+    "title": "QA Tester",
+    "company": "Glasshouse Games",
+    "stage": "new",
+    "fit": 66,
+    "fitReason": "Entry level; testing skills transfer.",
+    "workStyle": "",
+    "city": "Burnaby, BC",
+    "location": "Burnaby, BC",
+    "pay": "CAD 55-62K",
+    "posted": {
+     "date": "",
+     "approx": false
+    },
+    "added": "2026-11-24",
+    "appliedOn": "",
+    "source": "Email",
+    "url": "https://careers.example/glasshouse-games/qa-tester",
+    "summary": "Playtest and log defects for a mobile puzzle game.",
+    "description": [
+     "Playtest and log defects for a mobile puzzle game."
+    ],
+    "requirements": [
+     "Attention to detail",
+     "bug reports",
+     "Jira"
+    ],
+    "responses": [],
+    "notes": [],
+    "timeline": [
+     {
+      "date": "2026-11-24",
+      "label": "Added to the board",
+      "by": "assistant"
+     }
+    ],
+    "updatedByAssistant": false,
+    "reason": "",
+    "action": "",
+    "resume": null,
+    "possibleDuplicateOf": [],
+    "eligible": true,
+    "eligibility": "Passes your checks",
+    "found": "found by email on 2026-11-25"
+   }
+  ],
+  "ineligible": [],
+  "attention": [
+   {
+    "id": "0554:deadline:2026-11-27",
+    "code": "0554",
+    "kind": "deadline",
+    "title": "Assessment for QA Analyst at Lumen Health Tech",
+    "text": "Take-home API testing task",
+    "due": "2026-11-27",
+    "daysLeft": 2
+   },
+   {
+    "id": "DF18:deadline:2026-11-28",
+    "code": "DF18",
+    "kind": "deadline",
+    "title": "Interview for Junior Web Developer at Northwind Apps",
+    "text": "Phone screen with the hiring manager",
+    "due": "2026-11-28",
+    "daysLeft": 3
+   }
+  ],
+  "stats": {
+   "weeks": [
+    {
+     "weekOf": "2026-10-05",
+     "applied": 0
+    },
+    {
+     "weekOf": "2026-10-12",
+     "applied": 0
+    },
+    {
+     "weekOf": "2026-10-19",
+     "applied": 0
+    },
+    {
+     "weekOf": "2026-10-26",
+     "applied": 0
+    },
+    {
+     "weekOf": "2026-11-02",
+     "applied": 0
+    },
+    {
+     "weekOf": "2026-11-09",
+     "applied": 1
+    },
+    {
+     "weekOf": "2026-11-16",
+     "applied": 4
+    },
+    {
+     "weekOf": "2026-11-23",
+     "applied": 0
+    }
+   ],
+   "applied": 5,
+   "replied": 3,
+   "replyRate": 60,
+   "medianDaysToReply": 5
+  },
+  "lastChecked": 1795618513,
+  "checkRequestedAt": 0,
+  "views": [],
+  "messagesUnread": 0
+ },
+ "activity": [
+  {
+   "ts": 1795542913,
+   "code": "FB62",
+   "title": "IT Support Specialist",
+   "company": "Harbourline Credit Union",
+   "by": "you",
+   "kind": "response",
+   "text": "Reply recorded: rejection: Went with another candidate",
+   "undo": null
+  },
+  {
+   "ts": 1795542912,
+   "code": "56DC",
+   "title": "Frontend Developer",
+   "company": "Sparrow Fintech",
+   "by": "assistant",
+   "kind": "review",
+   "text": "Inbox: pending found by email on 2026-11-25",
+   "undo": null
+  },
+  {
+   "ts": 1795542912,
+   "code": "B124",
+   "title": "QA Tester",
+   "company": "Glasshouse Games",
+   "by": "assistant",
+   "kind": "review",
+   "text": "Inbox: pending found by email on 2026-11-25",
+   "undo": null
+  },
+  {
+   "ts": 1795456513,
+   "code": "0554",
+   "title": "QA Analyst",
+   "company": "Lumen Health Tech",
+   "by": "you",
+   "kind": "response",
+   "text": "Reply recorded: assessment: Take-home API testing task [deadline 2026-11-27]",
+   "undo": null
+  },
+  {
+   "ts": 1795370113,
+   "code": "4A1B",
+   "title": "Full Stack Developer",
+   "company": "Pinecone Studio",
+   "by": "you",
+   "kind": "applied",
+   "text": "Marked as applied",
+   "undo": null
+  },
+  {
+   "ts": 1795283712,
+   "code": "DF18",
+   "title": "Junior Web Developer",
+   "company": "Northwind Apps",
+   "by": "you",
+   "kind": "response",
+   "text": "Reply recorded: interview: Phone screen with the hiring manager [deadline 2026-11-28]",
+   "undo": null
+  },
+  {
+   "ts": 1795197313,
+   "code": "8364",
+   "title": "Technical Support Analyst",
+   "company": "Brightpath Software",
+   "by": "you",
+   "kind": "stage",
+   "text": "Moved to Not for me (Pay is below the target range)",
+   "undo": {
+    "code": "8364",
+    "to": "new"
+   }
+  },
+  {
+   "ts": 1795110913,
+   "code": "FB62",
+   "title": "IT Support Specialist",
+   "company": "Harbourline Credit Union",
+   "by": "you",
+   "kind": "applied",
+   "text": "Marked as applied",
+   "undo": null
+  },
+  {
+   "ts": 1795024513,
+   "code": "E8ED",
+   "title": "Software Developer I",
+   "company": "Cedar Logistics",
+   "by": "you",
+   "kind": "applied",
+   "text": "Marked as applied",
+   "undo": null
+  },
+  {
+   "ts": 1794938113,
+   "code": "0554",
+   "title": "QA Analyst",
+   "company": "Lumen Health Tech",
+   "by": "you",
+   "kind": "response",
+   "text": "Reply recorded: info-request: Recruiter asked for availability",
+   "undo": null
+  },
+  {
+   "ts": 1794851713,
+   "code": "0554",
+   "title": "QA Analyst",
+   "company": "Lumen Health Tech",
+   "by": "you",
+   "kind": "applied",
+   "text": "Marked as applied",
+   "undo": null
+  },
+  {
+   "ts": 1794765312,
+   "code": "DF18",
+   "title": "Junior Web Developer",
+   "company": "Northwind Apps",
+   "by": "you",
+   "kind": "applied",
+   "text": "Marked as applied",
+   "undo": null
+  },
+  {
+   "ts": 1794599713,
+   "code": "DF18",
+   "title": "Junior Web Developer",
+   "company": "Northwind Apps",
+   "by": "you",
+   "kind": "note",
+   "text": "Note: Recruiter said the team uses React and Node. Ask about hybrid days.",
+   "undo": null
+  }
+ ],
+ "messages": {
+  "threads": [],
+  "unread": 0
+ },
+ "today": "2026-11-25",
+ "now": 1795629313
+}

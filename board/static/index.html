@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Applications Board</title>
+<meta name="description" content="A calm board for every job application you are tracking.">
+<style>
+/* OD-LAYOUT-PRIMITIVES v1 — structure only: display, flex/grid, overflow, wrapping, ratio, geometry.
+   Put this @layer first; product CSS outside the layer wins ordinary layout rules.
+   Native hidden and closed-dialog states take precedence over component display rules. */
+@layer od-layout {
+  [hidden]:not([hidden="until-found" i]) { display: none !important; }
+  dialog:not([open]) { display: none !important; }
+
+  :where(.od-stack,.od-row,.od-row-top,.od-cluster,.od-grid,.od-field,.od-stat,.od-cell,.od-tile) > :where(*) { min-width: 0; }
+
+  /* containers */
+  .od-stack   { display: flex; flex-direction: column; gap: var(--od-gap, 8px); }
+  .od-row     { display: flex; align-items: center; gap: var(--od-gap, 8px); }
+  .od-row-top { display: flex; align-items: flex-start; gap: var(--od-gap, 8px); }
+  .od-cluster { display: flex; flex-wrap: wrap; align-items: center; gap: var(--od-gap, 8px); }
+  .od-fill    { flex: 1 1 0; min-width: 0; }
+  .od-fixed   { flex: none; }
+  .od-grid    { display: grid; gap: var(--od-gap, 12px); grid-template-columns: repeat(var(--od-cols, 3), minmax(0, 1fr)); }
+
+  /* stacked information: each piece is its own line — never sibling inline spans */
+  .od-stat, .od-field, .od-cell { display: grid; gap: var(--od-gap, 2px); }
+  :where(.od-stat,.od-field,.od-cell) > :where(*) { display: block; }
+  .od-tile { display: grid; grid-template-rows: auto 1fr; }
+  :where(.od-tile) > :where(*) { display: block; }
+
+  /* media keeps its intrinsic ratio by default; never a distorted or cropped
+     cover by accident. height:auto lets the ratio win over an <img height="…">
+     attribute. Cropping to a uniform box is an explicit opt-in: set --od-ratio
+     AND add .od-media-cover together (per the core rule, only where a crop is
+     deliberate — tile thumbs, decorative fills — never on full-frame content). */
+  .od-media { display: block; width: 100%; height: auto; aspect-ratio: var(--od-ratio, auto); }
+  .od-media-cover { object-fit: cover; }
+
+  /* functional inline SVG icons opt into bounded geometry; content SVGs keep their own */
+  .od-icon { display: inline-block; inline-size: var(--od-icon-size, 1em); block-size: var(--od-icon-size, 1em); flex: none; }
+
+  /* data text only — authored copy is rewritten to its budget instead */
+  .od-truncate { display: block; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .od-clamp-2, .od-clamp-3 { display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; overflow-wrap: anywhere; }
+  .od-clamp-2 { -webkit-line-clamp: 2; }
+  .od-clamp-3 { -webkit-line-clamp: 3; }
+  .od-lines-2 { min-height: calc(2 * 1.4em); }   /* block-level reservation for a shared baseline */
+  .od-nowrap  { white-space: nowrap; }           /* 数字+单位 · 价格+起 · 日期+星期 */
+  .od-keep    { word-break: keep-all; overflow-wrap: anywhere; } /* CJK labels break at spaces / <wbr> first */
+
+  /* screen skeleton (optional): bars take their own space, the middle scrolls — no padding guessed for chrome */
+  .od-screen { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; }
+  .od-scroll { overflow-y: auto; overscroll-behavior: contain; min-height: 0; }
+
+  /* horizontal rail: the next item peeks at the edge; trailing room survives overflow */
+  .od-rail { display: flex; gap: var(--od-gap, 8px); overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none;
+             padding-inline: var(--od-rail-pad, 16px); scroll-padding-inline: var(--od-rail-pad, 16px); }
+  .od-rail::-webkit-scrollbar { display: none; }
+  :where(.od-rail) > :where(*) { flex: none; scroll-snap-align: start; }
+  :where(.od-rail) > :where(:last-child) { margin-inline-end: var(--od-rail-pad, 16px); }
+
+  .od-spacer { flex: none; visibility: hidden; pointer-events: none; }
+  .od-touch  { min-width: 44px; min-height: 44px; }
+}
+:root [hidden]:where(:not([hidden="until-found" i])) { display: none; }
+/* /OD-LAYOUT-PRIMITIVES v1 */
+</style>
+<meta name="theme-color" content="#3a57a8">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="app.css">
+<link rel="stylesheet" href="features.css">
+</head>
+<body>
+
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <defs>
+    <symbol id="i-briefcase" viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="13" rx="2.5"/><path d="M9 7V5.5A1.5 1.5 0 0 1 10.5 4h3A1.5 1.5 0 0 1 15 5.5V7M2.5 12h19"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+    <symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+    <symbol id="i-board" viewBox="0 0 24 24"><rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="10" y="4" width="5" height="11" rx="1.5"/><rect x="17" y="4" width="4" height="7" rx="1.5"/></symbol>
+    <symbol id="i-list" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v10m0 0l-4-4m4 4l4-4M4 18h16"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/></symbol>
+    <symbol id="i-sparkle" viewBox="0 0 24 24"><path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8L12 3zM18.5 16.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7.7-2z"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M4 12l16-7-7 16-2.5-6.5L4 12z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 12.5A7.5 7.5 0 0 1 12.5 20H8l-4 2.5V12.5A7.5 7.5 0 0 1 11.5 5h1A7.5 7.5 0 0 1 20 12.5z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 4l2.5 5.2 5.5.8-4 3.9 1 5.6L12 16.9 7 19.5l1-5.6-4-3.9 5.5-.8L12 4z"/></symbol>
+    <symbol id="i-circle-slash" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M6.5 17.5l11-11"/></symbol>
+    <symbol id="i-archive" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="4" rx="1.5"/><path d="M5 9v9.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V9M10 13h4"/></symbol>
+    <symbol id="i-clipboard" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="16" rx="2"/><path d="M9 5V4h6v1M9 11h6M9 15h4"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 8.2v.6"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s6.5-6.1 6.5-10.5A6.5 6.5 0 1 0 5.5 10.5C5.5 14.9 12 21 12 21z"/><circle cx="12" cy="10.5" r="2.4"/></symbol>
+    <symbol id="i-wallet" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2.5"/><path d="M3 10.5h18M16.5 15h1.5"/></symbol>
+    <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3.5v3M15 3.5v3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3.2 2"/></symbol>
+    <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M19.5 4.5L12 12M18 14v4.5A1.5 1.5 0 0 1 16.5 20h-10A1.5 1.5 0 0 1 5 18.5v-10A1.5 1.5 0 0 1 6.5 7H11"/></symbol>
+    <symbol id="i-chevron-down" viewBox="0 0 24 24"><path d="M6 9.5l6 6 6-6"/></symbol>
+    <symbol id="i-chevron-right" viewBox="0 0 24 24"><path d="M9.5 5l7 7-7 7"/></symbol>
+    <symbol id="i-chevron-left" viewBox="0 0 24 24"><path d="M14.5 5l-7 7 7 7"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M19 13.5V6.5A2.5 2.5 0 0 0 16.5 4h-9A2.5 2.5 0 0 0 5 6.5v11A2.5 2.5 0 0 0 7.5 20H13"/><path d="M13 20l6-6h-4.5a1.5 1.5 0 0 0-1.5 1.5V20zM9 9h6M9 13h3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 4.5l8 14.5H4l8-14.5z"/><path d="M12 10v4M12 16.6v.4"/></symbol>
+    <symbol id="i-wifi-off" viewBox="0 0 24 24"><path d="M4 7.5a16 16 0 0 1 7-2.9M20 7.5a16 16 0 0 0-4-2.3M7 11.3a11 11 0 0 1 3-1.4M17 11.3a11 11 0 0 0-1.8-1M9.8 15a6 6 0 0 1 4.4 0M12 19v.4M4 4l16 16"/></symbol>
+    <symbol id="i-grip" viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.4" class="od-icon--dot"/><circle cx="15" cy="6" r="1.4"/><circle cx="9" cy="12" r="1.4"/><circle cx="15" cy="12" r="1.4"/><circle cx="9" cy="18" r="1.4"/><circle cx="15" cy="18" r="1.4"/></symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="6" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="18" cy="12" r="1.5"/></symbol>
+    <symbol id="i-sort" viewBox="0 0 24 24"><path d="M12 5v14M12 5l-4 4M12 5l4 4"/></symbol>
+    <symbol id="i-sort-down" viewBox="0 0 24 24"><path d="M12 19V5M12 19l-4-4M12 19l4-4"/></symbol>
+    <symbol id="i-inbox" viewBox="0 0 24 24"><path d="M4 13l2.4-7A2 2 0 0 1 8.3 4.5h7.4A2 2 0 0 1 17.6 6L20 13v4.5A1.5 1.5 0 0 1 18.5 19h-13A1.5 1.5 0 0 1 4 17.5V13z"/><path d="M4 13h4l1 2.5h6L16 13h4"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5.5" width="18" height="13" rx="2.5"/><path d="M4 7.5l8 5.5 8-5.5"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 14l4-4M9.5 7.5l1.6-1.6a4 4 0 1 1 5.6 5.6l-1.6 1.6M14.5 16.5l-1.6 1.6a4 4 0 1 1-5.6-5.6l1.6-1.6"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M4 8h9a5.5 5.5 0 1 1 0 11H8"/><path d="M4 8l4-3.5M4 8l4 3.5"/></symbol>
+    <symbol id="i-refresh" viewBox="0 0 24 24"><path d="M19.5 12a7.5 7.5 0 1 1-2.6-5.7"/><path d="M19.8 4.5v4.2h-4.2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3.5l7 2.5v5.5c0 4.3-2.9 7.6-7 9-4.1-1.4-7-4.7-7-9V6l7-2.5z"/><path d="M9 12l2.2 2.2L15.5 10"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20h16M7.5 20v-6M12 20V7M16.5 20v-9"/></symbol>
+    <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 4.5H6.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H9"/><path d="M15 8l4 4-4 4"/><path d="M19 12H9.5"/></symbol>
+    <symbol id="i-history" viewBox="0 0 24 24"><path d="M4.6 11.2a7.5 7.5 0 1 1 2.1 6"/><path d="M4.3 6.8V11h4.2"/><path d="M12 8.5v4l3 1.8"/></symbol>
+    <symbol id="i-bookmark" viewBox="0 0 24 24"><path d="M7 4.5h10A1.5 1.5 0 0 1 18.5 6v14L12 16l-6.5 4V6A1.5 1.5 0 0 1 7 4.5z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M13.5 3.5h-6a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h9a2 2 0 0 0 2-2V8.5l-5-5z"/><path d="M13.5 3.5v5h5M9 13.5h6M9 16.5h4"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 5.5h3M10 18.5h4"/></symbol>
+    <symbol id="i-merge" viewBox="0 0 24 24"><path d="M6.5 20v-6.5L12 8l5.5 5.5V20"/><path d="M12 8V3.5M9.5 6L12 3.5 14.5 6"/></symbol>
+    <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4.6-1.1 10-10a2.2 2.2 0 0 0-3.1-3.1l-10 10L4 20z"/><path d="M14.6 6.6l3 3"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M15 9V6.5A2 2 0 0 0 13 4.5H6A2 2 0 0 0 4 6.5v7a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-snooze" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7"/><path d="M9.8 11h4.4l-4.4 5h4.4M12 3.5v2.2M7 5l1.6 1.6M17 5l-1.6 1.6"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4.5 7h15M9.5 7V5.5A1.5 1.5 0 0 1 11 4h2a1.5 1.5 0 0 1 1.5 1.5V7"/><path d="M6.6 7l.8 12.1a1.5 1.5 0 0 0 1.5 1.4h6.2a1.5 1.5 0 0 0 1.5-1.4L17.4 7"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip-link" href="#main">Skip to the board</a>
+
+<!-- ==================================================== sign in -->
+<div class="auth" id="view-login" hidden>
+  <div class="auth__card">
+    <div class="brand brand--lg">
+      <span class="brand__mark" aria-hidden="true"><svg class="od-icon"><use href="#i-briefcase"></use></svg></span>
+      <span class="brand__name">Applications Board</span>
+    </div>
+
+    <section class="auth__step" aria-labelledby="session-title">
+      <div class="od-stack" style="--od-gap: var(--sp-2)">
+        <h1 class="auth__title" id="session-title">Sign in</h1>
+        <p class="auth__lead">Enter your password to see your board.</p>
+      </div>
+      <form class="od-stack" id="login-form" method="post" action="#" novalidate style="--od-gap: var(--sp-4)">
+        <input class="sr-only" type="text" name="username" value="board" autocomplete="username" tabindex="-1" readonly aria-hidden="true">
+        <div class="field od-stack">
+          <label class="field__label" for="login-password">Password</label>
+          <input class="input" id="login-password" name="password" type="password" autocomplete="current-password"
+                 aria-describedby="login-error" required>
+          <p class="field__error" id="login-error" role="alert" hidden></p>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit" id="login-submit">Sign in</button>
+      </form>
+      <p class="auth__foot"><svg class="od-icon" aria-hidden="true" style="--od-icon-size:16px;vertical-align:-3px"><use href="#i-shield"></use></svg> Only you can see this board. Nothing is shared with employers.</p>
+    </section>
+  </div>
+</div>
+
+<!-- ========================================================== app shell -->
+<div class="app" id="view-app" hidden>
+
+  <header class="topbar">
+    <div class="topbar__inner">
+      <div class="topbar__lead">
+        <div class="brand">
+          <span class="brand__mark" aria-hidden="true"><svg class="od-icon"><use href="#i-briefcase"></use></svg></span>
+          <span class="brand__name">Applications Board</span>
+        </div>
+      </div>
+
+      <div class="toolbar" role="group" aria-label="Board tools">
+        <div class="search">
+          <span class="search__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-search"></use></svg></span>
+          <label class="sr-only" for="search">Search by title, company or code</label>
+          <input class="input search__input" id="search" type="search" placeholder="Search title, company or code">
+          <button class="search__clear" type="button" data-act="clear-search" hidden>
+            <svg class="od-icon" aria-hidden="true"><use href="#i-x"></use></svg>
+            <span class="sr-only">Clear search</span>
+          </button>
+        </div>
+
+        <button class="btn btn--outline" type="button" data-act="open-filters" aria-haspopup="dialog">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-filter"></use></svg>
+          <span>Filter</span>
+          <span class="count-dot" id="filter-count" hidden>0</span>
+        </button>
+
+        <button class="btn btn--outline btn--views" type="button" data-act="open-views" aria-haspopup="dialog">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-bookmark"></use></svg>
+          <span>Saved views</span>
+          <span class="count-dot count-dot--quiet" id="view-current" hidden>None</span>
+        </button>
+
+        <div class="segmented" role="group" aria-label="Choose a view">
+          <button class="segmented__btn" type="button" data-view="inbox" aria-pressed="false">
+            <svg class="od-icon" aria-hidden="true"><use href="#i-inbox"></use></svg><span>Inbox</span>
+            <span class="count-dot" id="inbox-count">6</span>
+          </button>
+          <button class="segmented__btn is-on" type="button" data-view="board" aria-pressed="true">
+            <svg class="od-icon" aria-hidden="true"><use href="#i-board"></use></svg><span>Board</span>
+          </button>
+          <button class="segmented__btn" type="button" data-view="list" aria-pressed="false">
+            <svg class="od-icon" aria-hidden="true"><use href="#i-list"></use></svg><span>List</span>
+          </button>
+        </div>
+
+        <button class="btn btn--primary btn--add" type="button" data-act="open-add" aria-haspopup="dialog">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-plus"></use></svg>
+          <span>Add jobs</span>
+        </button>
+
+        <a class="btn btn--outline" href="/api/export.csv" download>
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-download"></use></svg>
+          <span>Download CSV</span>
+        </a>
+
+        <button class="btn btn--icon" type="button" data-act="open-stats" aria-haspopup="dialog">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-chart"></use></svg>
+          <span class="sr-only">Your progress</span>
+        </button>
+
+        <button class="btn btn--icon btn--badged" type="button" data-act="open-messages" aria-expanded="false" aria-controls="msgs">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-chat"></use></svg>
+          <span class="sr-only" id="msgs-label">Messages</span>
+          <span class="count-dot count-dot--badge" id="msgs-badge" aria-hidden="true" hidden>0</span>
+        </button>
+
+        <button class="btn btn--icon" type="button" data-act="open-activity" aria-expanded="false" aria-controls="activity">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-history"></use></svg>
+          <span class="sr-only">What changed</span>
+        </button>
+
+        <button class="btn btn--icon" type="button" data-act="theme" aria-pressed="false">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px" id="theme-icon"><use href="#i-moon"></use></svg>
+          <span class="sr-only" id="theme-label">Switch to dark theme</span>
+        </button>
+
+        <button class="btn btn--icon" type="button" data-act="sign-out">
+          <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-logout"></use></svg>
+          <span class="sr-only">Sign out</span>
+        </button>
+      </div>
+
+      <p class="summary" id="summary" aria-live="polite">Loading your board…</p>
+    </div>
+  </header>
+
+  <div class="banners" id="banners">
+    <div class="banner banner--error" id="banner-error" role="status" hidden>
+      <span class="banner__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-alert"></use></svg></span>
+      <span class="od-fill">Can't reach the server, showing the last saved data.</span>
+      <button class="btn btn--quiet btn--sm od-fixed" type="button" data-act="retry">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:16px"><use href="#i-refresh"></use></svg>
+        <span>Try again</span>
+      </button>
+    </div>
+    <div class="banner banner--offline" id="banner-offline" role="status" hidden>
+      <span class="banner__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-wifi-off"></use></svg></span>
+      <span class="od-fill">You are offline. You can read everything here; changes will be saved when you are back.</span>
+    </div>
+    <div class="banner banner--install" id="banner-install" hidden>
+      <span class="banner__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-phone"></use></svg></span>
+      <span class="od-fill">Put this on your home screen and it opens like an app.</span>
+      <button class="btn btn--quiet btn--sm od-fixed" type="button" data-act="install-how" aria-haspopup="dialog">Show me how</button>
+      <button class="btn btn--icon od-fixed" type="button" data-act="install-dismiss">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Hide the home screen tip</span>
+      </button>
+    </div>
+  </div>
+
+  <main class="main" id="main" tabindex="-1">
+
+    <!-- ------------------------------------------------- email check row -->
+    <div class="od-row mailrow" id="mailrow">
+      <button class="btn btn--outline btn--sm od-fixed" type="button" data-act="check-email">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:16px"><use href="#i-mail"></use></svg>
+        <span id="check-label">Check my email now</span>
+      </button>
+      <p class="mailrow__when" id="mail-when" aria-live="polite">Not checked yet</p>
+    </div>
+
+    <!-- ------------------------------------------- needs your attention -->
+    <section class="attention" id="attention" aria-labelledby="attention-title" hidden>
+      <div class="od-row attention__head">
+        <h2 class="section-title" id="attention-title">
+          <svg class="od-icon" aria-hidden="true"><use href="#i-clock"></use></svg>
+          <span>Needs your attention</span>
+        </h2>
+        <button class="btn btn--quiet btn--sm od-fixed" type="button" data-act="dismiss-all">Dismiss all</button>
+      </div>
+      <div class="od-rail attention__rail" id="attention-items"></div>
+    </section>
+
+    <!-- ------------------------------------------------------ inbox view -->
+    <section class="panel" id="panel-inbox" aria-labelledby="inbox-title" hidden>
+      <div class="inbox">
+        <div class="od-row inbox__head">
+          <h2 class="section-title od-fill" id="inbox-title">
+            <svg class="od-icon" aria-hidden="true"><use href="#i-inbox"></use></svg>
+            <span>Waiting for a yes or no</span>
+          </h2>
+          <button class="btn btn--quiet btn--sm od-fixed" type="button" data-act="inbox-select-all" id="inbox-select-all">Select all</button>
+        </div>
+        <p class="inbox__lede" id="inbox-lede">I found these in your email and chats. Nothing here is on your board yet.</p>
+
+        <div class="bulkbar" id="inbox-bulk" role="group" aria-label="Actions for the jobs you selected" hidden>
+          <p class="bulkbar__count od-fill" id="inbox-selected">2 selected</p>
+          <div class="od-cluster bulkbar__acts">
+            <button class="btn btn--primary btn--sm" type="button" data-act="bulk-accept">
+              <svg class="od-icon" aria-hidden="true" style="--od-icon-size:16px"><use href="#i-check"></use></svg>
+              <span id="bulk-accept-label">Accept 2</span>
+            </button>
+            <button class="btn btn--outline btn--sm" type="button" data-act="bulk-decline">
+              <span id="bulk-decline-label">Decline 2</span>
+            </button>
+            <button class="btn btn--quiet btn--sm" type="button" data-act="bulk-clear">Clear</button>
+          </div>
+        </div>
+
+        <ul class="inbox__list" id="inbox-list"></ul>
+
+        <div class="inbox__ineligible" id="ineligible-block" hidden>
+          <h3 class="filterset__label">Not eligible</h3>
+          <p class="inbox__lede">I checked these against your rules and set them aside. You can still add one if you want it.</p>
+          <ul class="inbox__list" id="ineligible-list"></ul>
+        </div>
+
+        <div class="empty" id="inbox-empty" hidden>
+          <span class="empty__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-inbox"></use></svg></span>
+          <p class="empty__title">Nothing waiting for you</p>
+          <p>I will put new postings here as I find them in your email and chats.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------ board view -->
+    <section class="panel" id="panel-board" aria-labelledby="board-title">
+      <h2 class="sr-only" id="board-title">Board by stage</h2>
+      <div class="od-rail stagebar" id="stagebar" role="tablist" aria-label="Choose a stage to show"></div>
+      <div class="board" id="board"></div>
+      <div class="empty" id="board-empty" hidden>
+        <span class="empty__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-inbox"></use></svg></span>
+        <p class="empty__title">Nothing on your board yet</p>
+        <p>When the chatbot finds a job that suits you, it lands here as a card. Ask it to look in your email or send it a posting link.</p>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------- list view -->
+    <section class="panel" id="panel-list" aria-labelledby="list-title" hidden>
+      <h2 class="sr-only" id="list-title">All applications as a list</h2>
+
+      <div class="od-row listsort">
+        <div class="od-field field" style="--od-gap:4px">
+          <label class="field__label" for="sort-select">Sort by</label>
+          <select class="input" id="sort-select">
+            <option value="added-desc">Date added — newest first</option>
+            <option value="added-asc">Date added — oldest first</option>
+            <option value="fit-desc">Fit — highest first</option>
+            <option value="fit-asc">Fit — lowest first</option>
+            <option value="company-asc">Company — A to Z</option>
+            <option value="title-asc">Job title — A to Z</option>
+            <option value="stage-asc">Stage — New to Not for me</option>
+            <option value="posted-desc">Posted — newest first</option>
+            <option value="code-asc">Code — A to Z</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table class="table" id="table">
+          <caption class="sr-only">Every application, sortable by any column</caption>
+          <thead>
+            <tr>
+              <th scope="col" data-sort="code"><button class="sort-btn" type="button" data-sortby="code">Code <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="title"><button class="sort-btn" type="button" data-sortby="title">Job title <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="company"><button class="sort-btn" type="button" data-sortby="company">Company <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="stage"><button class="sort-btn" type="button" data-sortby="stage">Stage <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="fit"><button class="sort-btn" type="button" data-sortby="fit">Fit <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="location"><button class="sort-btn" type="button" data-sortby="location">Location <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="posted"><button class="sort-btn" type="button" data-sortby="posted">Posted <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col" data-sort="added"><button class="sort-btn" type="button" data-sortby="added">Added <svg class="od-icon" aria-hidden="true"><use href="#i-sort"></use></svg></button></th>
+              <th scope="col">Job posting</th>
+            </tr>
+          </thead>
+          <tbody id="table-body"></tbody>
+        </table>
+      </div>
+
+      <div class="rows" id="rows"></div>
+
+      <div class="empty" id="list-empty" hidden>
+        <span class="empty__icon" aria-hidden="true"><svg class="od-icon"><use href="#i-search"></use></svg></span>
+        <p class="empty__title">No applications match</p>
+        <p>Try a shorter search, or clear a filter or two.</p>
+        <button class="btn btn--outline" type="button" data-act="clear-all">Clear search and filters</button>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------- skeleton -->
+    <section class="panel" id="panel-skeleton" aria-hidden="true" hidden>
+      <div class="od-rail stagebar">
+        <div class="sk sk--chip sk-anim"></div><div class="sk sk--chip sk-anim"></div>
+        <div class="sk sk--chip sk-anim"></div><div class="sk sk--chip sk-anim"></div>
+      </div>
+      <div class="board" id="skeleton-board"></div>
+      <p class="sr-only" role="status">Loading your applications</p>
+    </section>
+
+  </main>
+
+  <!-- ----------------------------------------------------------- messages -->
+  <section class="msgs" id="msgs" aria-labelledby="msgs-title" data-screen="list" hidden>
+    <header class="msgs__bar">
+      <button class="btn btn--outline btn--sm od-fixed" type="button" data-act="msgs-close" id="msgs-back">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:16px"><use href="#i-chevron-left"></use></svg>
+        <span>Back to board</span>
+      </button>
+      <h2 class="msgs__title" id="msgs-title">Messages</h2>
+    </header>
+    <div class="msgs__body">
+      <aside class="msgs__list" id="msgs-list" aria-label="All conversations">
+        <div class="msgs__find">
+          <label class="sr-only" for="msgs-search">Search your conversations</label>
+          <input class="input" id="msgs-search" type="search" autocomplete="off" placeholder="Search by company, title or code">
+          <button class="chip" type="button" data-act="msgs-unread-only" id="msgs-unread-only" aria-pressed="false">Unread only</button>
+        </div>
+        <button class="threadrow threadrow--general" type="button" data-act="open-chat">
+          <span class="threadrow__top"><strong>Ask the assistant</strong></span>
+          <span class="threadrow__snip">Questions about your board and your email.</span>
+        </button>
+        <div class="msgs__threads" id="msgs-threads"></div>
+      </aside>
+      <section class="msgs__chat" id="msgs-chat" aria-label="Conversation"></section>
+      <aside class="msgs__preview" id="msgs-preview" aria-label="Document preview"></aside>
+    </div>
+  </section>
+
+  <!-- --------------------------------------------- ask the assistant -->
+  <button class="chat-fab" type="button" data-act="open-chat" aria-haspopup="dialog" aria-expanded="false" aria-controls="chat">
+    <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-chat"></use></svg>
+    <span>Ask the assistant</span>
+  </button>
+
+  <aside class="chat" id="chat" role="dialog" aria-labelledby="chat-title" hidden>
+    <div class="chat__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="chat__title" id="chat-title">Ask the assistant</h2>
+        <p class="chat__sub">It can read your email and your board.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-act="close-chat">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close the assistant</span>
+      </button>
+    </div>
+
+    <div class="chat__log" id="chat-log" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+    <div class="chat__chips" id="chat-chips"></div>
+
+    <div class="chat__compose">
+      <label class="sr-only" for="chat-input">Ask about your applications</label>
+      <input class="input" id="chat-input" type="text" placeholder="Ask about your applications">
+      <button class="btn btn--primary btn--icon od-fixed" type="button" data-act="chat-send" id="chat-send">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-send"></use></svg>
+        <span class="sr-only">Send</span>
+      </button>
+    </div>
+  </aside>
+
+  <aside class="chat chat--activity" id="activity" aria-labelledby="activity-title" hidden>
+    <div class="chat__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="chat__title" id="activity-title">What changed</h2>
+        <p class="chat__sub">Everything you and the assistant have done.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-act="close-activity">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close the activity log</span>
+      </button>
+    </div>
+    <div class="chat__log actlog" id="activity-log"></div>
+  </aside>
+
+  <div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+</div>
+
+<!-- ------------------------------------------------------- card popup -->
+<dialog class="popup" id="dlg-card" aria-labelledby="card-title">
+  <div class="popup__inner" id="card-inner"></div>
+</dialog>
+
+<!-- ============================================== dialogs, sheets, modals -->
+<dialog class="sheet" id="dlg-stage" aria-labelledby="dlg-stage-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-stage-title">Move to a stage</h2>
+        <p class="sheet__sub" id="dlg-stage-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll optlist" id="dlg-stage-list"></div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="dlg-actions" aria-labelledby="dlg-actions-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-actions-title">Quick actions</h2>
+        <p class="sheet__sub" id="dlg-actions-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll optlist" id="dlg-actions-list"></div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="dlg-filters" aria-labelledby="dlg-filters-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-filters-title">Filter your board</h2>
+        <p class="sheet__sub">Filters apply to both the board and the list.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll">
+      <fieldset class="filterset" style="border:0;padding:0;margin:0">
+        <legend class="filterset__label">Stage</legend>
+        <div class="chips" id="f-stages"></div>
+      </fieldset>
+      <fieldset class="filterset" style="border:0;padding:0;margin:0">
+        <legend class="filterset__label">Fit score</legend>
+        <div class="chips" id="f-fit"></div>
+      </fieldset>
+      <fieldset class="filterset" style="border:0;padding:0;margin:0">
+        <legend class="filterset__label">Remote or local</legend>
+        <div class="chips" id="f-where"></div>
+      </fieldset>
+      <fieldset class="filterset" style="border:0;padding:0;margin:0">
+        <legend class="filterset__label">Date added</legend>
+        <div class="chips" id="f-added"></div>
+      </fieldset>
+      <label class="switch">
+        <input type="checkbox" id="f-lowfit">
+        <span>Show fit scores under 40</span>
+      </label>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--outline" type="button" data-act="reset-filters">Clear all filters</button>
+      <button class="btn btn--primary" type="button" data-act="apply-filters">Show results</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="modal" id="dlg-confirm" aria-labelledby="dlg-confirm-title">
+  <div class="modal__inner">
+    <div class="od-field" style="--od-gap:var(--sp-2)">
+      <h2 class="sheet__title" id="dlg-confirm-title">Mark as applied?</h2>
+      <p class="sheet__sub" id="dlg-confirm-body"></p>
+    </div>
+    <div class="sheet__foot modal__foot">
+      <button class="btn btn--outline" type="button" data-close>Keep as it is</button>
+      <button class="btn btn--primary" type="button" data-act="confirm-yes" id="dlg-confirm-yes">Yes, move it</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="dlg-note" aria-labelledby="dlg-note-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-note-title">Add a note</h2>
+        <p class="sheet__sub" id="dlg-note-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="od-field field" style="--od-gap:6px">
+      <label class="field__label" for="note-text">Your note</label>
+      <textarea class="input" id="note-text" placeholder="Anything you want to remember about this one."></textarea>
+      <p class="field__help">Only you can see your notes.</p>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--outline" type="button" data-close>Cancel</button>
+      <button class="btn btn--primary" type="button" data-act="save-note">Save note</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ------------------------------------------------- add jobs by link -->
+<dialog class="sheet sheet--wide" id="dlg-add" aria-labelledby="dlg-add-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-add-title">Add jobs</h2>
+        <p class="sheet__sub" id="dlg-add-sub">Paste one posting, several, or a company careers page.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll" id="dlg-add-body"></div>
+    <div class="sheet__foot" id="dlg-add-foot"></div>
+  </div>
+</dialog>
+
+<!-- ------------------------------------------------ decline from inbox -->
+<dialog class="sheet" id="dlg-decline" aria-labelledby="dlg-decline-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-decline-title">Decline this job?</h2>
+        <p class="sheet__sub" id="dlg-decline-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="od-field field" style="--od-gap:6px">
+      <label class="field__label" for="decline-reason">Reason (optional)</label>
+      <textarea class="input" id="decline-reason" placeholder="Pay is too low, too far to travel, not the work I want…"></textarea>
+      <p class="field__help">Telling me why helps me find better matches. You can leave it empty.</p>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--outline" type="button" data-close>Keep it waiting</button>
+      <button class="btn btn--primary" type="button" data-act="decline-confirm">Decline</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- -------------------------------------------------------- your progress -->
+<dialog class="sheet sheet--wide" id="dlg-stats" aria-labelledby="dlg-stats-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-stats-title">Your progress</h2>
+        <p class="sheet__sub">Counted from the applications on your board.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll" id="dlg-stats-body"></div>
+    <div class="sheet__foot">
+      <a class="btn btn--outline" href="/api/deadlines.ics" download id="ics-all">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-calendar"></use></svg>
+        <span>Download all deadlines</span>
+      </a>
+      <button class="btn btn--primary" type="button" data-close>Done</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ------------------------------------------------------ duplicate merge -->
+<dialog class="sheet sheet--wide" id="dlg-dup" aria-labelledby="dlg-dup-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-dup-title">Is this the same job?</h2>
+        <p class="sheet__sub" id="dlg-dup-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll" id="dlg-dup-body"></div>
+    <div class="sheet__foot">
+      <button class="btn btn--outline" type="button" data-act="dup-keep">Keep both</button>
+      <button class="btn btn--primary" type="button" data-act="dup-merge">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-merge"></use></svg>
+        <span>Merge into one</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ----------------------------------------------------------- saved views -->
+<dialog class="sheet" id="dlg-views" aria-labelledby="dlg-views-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-views-title">Saved views</h2>
+        <p class="sheet__sub">A search and a set of filters you can come back to.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll" id="dlg-views-body"></div>
+    <div class="sheet__foot sheet__foot--stack">
+      <button class="btn btn--primary" type="button" data-act="view-save">
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:18px"><use href="#i-plus"></use></svg>
+        <span>Save what I am looking at now</span>
+      </button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="sheet" id="dlg-view-name" aria-labelledby="dlg-view-name-title">
+  <div class="sheet__inner">
+    <div class="sheet__grab" aria-hidden="true"></div>
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-view-name-title">Name this view</h2>
+        <p class="sheet__sub" id="dlg-view-name-sub"></p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="od-field field" style="--od-gap:6px">
+      <label class="field__label" for="view-name-input">View name</label>
+      <input class="input" id="view-name-input" type="text" maxlength="40" placeholder="Remote, 70+ fit">
+      <p class="field__error" id="view-name-error" role="alert" hidden>Give the view a name first.</p>
+      <p class="field__help">Only you see your saved views.</p>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--outline" type="button" data-close>Cancel</button>
+      <button class="btn btn--primary" type="button" data-act="view-name-save">Save view</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- ---------------------------------------------------- add to home screen -->
+<dialog class="modal" id="dlg-install" aria-labelledby="dlg-install-title">
+  <div class="sheet__inner">
+    <div class="sheet__head">
+      <div class="od-field od-fill" style="--od-gap:2px">
+        <h2 class="sheet__title" id="dlg-install-title">Add to your home screen</h2>
+        <p class="sheet__sub">It takes about ten seconds and works offline for reading.</p>
+      </div>
+      <button class="btn btn--icon od-fixed" type="button" data-close>
+        <svg class="od-icon" aria-hidden="true" style="--od-icon-size:20px"><use href="#i-x"></use></svg>
+        <span class="sr-only">Close</span>
+      </button>
+    </div>
+    <div class="sheet__scroll">
+      <div class="installhow">
+        <div class="installhow__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" width="64" height="64" role="img">
+            <rect width="64" height="64" rx="15" fill="#3a57a8"></rect>
+            <g fill="none" stroke="#ffffff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="16" y="24" width="32" height="22" rx="4"></rect>
+              <path d="M27 24v-2.5A2.5 2.5 0 0 1 29.5 19h5a2.5 2.5 0 0 1 2.5 2.5V24M16 32.5h32"></path>
+            </g>
+          </svg>
+        </div>
+        <ol class="installhow__steps">
+          <li><span class="installhow__n">1</span><span>Open this page in Safari or Chrome on your phone.</span></li>
+          <li><span class="installhow__n">2</span><span>In Safari tap the share button, in Chrome tap the ⋮ menu, then <strong>Add to Home Screen</strong>.</span></li>
+          <li><span class="installhow__n">3</span><span>It appears with your other apps. The first time you open it, you may need to sign in with the email code again.</span></li>
+        </ol>
+      </div>
+    </div>
+    <div class="sheet__foot">
+      <button class="btn btn--primary" type="button" data-close>Got it</button>
+    </div>
+  </div>
+</dialog>
+
+<script src="app.js"></script>
+</body>
+</html>

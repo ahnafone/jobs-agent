@@ -1,0 +1,39 @@
+{
+  "_comment": "Settings used by the test suite (JOBS_AGENT_CONFIG). All people, companies and addresses are made up.",
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "board_url": "https://board.example.com",
+  "allowed_hosts": ["localhost", "127.0.0.1", "board.example.com"],
+  "timezone": "America/Vancouver",
+  "intake_job_id": "abc123def456",
+  "seeker_profile": "The job seeker: based in Vancouver, BC; BSc in Computer Science; 5+ years of software experience; wants software developer and IT support roles, remote in Canada or hybrid in Metro Vancouver; junior to intermediate level only.",
+  "resume": {
+    "years_phrase": "5+ years of experience",
+    "employer_phrase": "Example Studio",
+    "profile_files": ["profile.md", "odd-jobs-profile.md"],
+    "degree_rewrite": ["Computing Science", "Computer Science"],
+    "banned_claims": [
+      ["spring\\s*boot", "Spring Boot"],
+      ["\\bJPA\\b", "JPA"],
+      ["hibernate", "Hibernate"],
+      ["junit", "JUnit"],
+      ["\\bJWT\\b", "JWT"],
+      ["\\bTLS\\b", "TLS"],
+      ["agentic\\s+ai", "agentic AI"],
+      ["azure", "Azure"],
+      ["\\.NET\\b", ".NET"]
+    ],
+    "software_roles": [
+      ["Acme Robotics", "Vancouver, BC", "Mar 2023 – Feb 2024 (11 months)"],
+      ["Example Studio", "Burnaby, BC", "Jan 2019 – Present (7 years, 11 months)"],
+      ["Globex Corp", "Surrey, BC", "Jun 2021 – Dec 2022 (1 year, 7 months)"]
+    ],
+    "odd_jobs_roles": [
+      "Barista, Corner Cafe, Vancouver, BC",
+      "Stock Clerk, Example Market, Burnaby, BC",
+      "Overnight Associate, Sample Warehouse, Surrey, BC",
+      "Crew Member, Example Burgers, Langley, BC"
+    ],
+    "writer_notes": []
+  }
+}

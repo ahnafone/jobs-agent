@@ -1,0 +1,32 @@
+name: tests
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install resume-test dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends libreoffice-writer poppler-utils fonts-liberation
+          pip install python-docx==1.2.0
+      - name: Tests
+        run: |
+          for t in test_jobs_helpers test_board test_board_auth test_job_email_scan test_resume_helpers test_jobs_config; do
+            echo "== $t"
+            python -I "tests/$t.py"
+          done
+      - name: Demo builds
+        run: |
+          node --check demo/mock-api.js
+          python demo/build.py "$RUNNER_TEMP/demo"
+          grep -q 'window.__DEMO__' "$RUNNER_TEMP/demo/index.html"

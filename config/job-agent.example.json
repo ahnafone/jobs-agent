@@ -1,0 +1,30 @@
+{
+  "_comment": "Copy to ~/.hermes/job-agent.json (chmod 600) and edit. Every key is optional; see scripts/jobs_config.py for the defaults.",
+  "name": "Your Name",
+  "email": "you@example.com",
+  "board_url": "http://127.0.0.1:8765",
+  "allowed_hosts": ["localhost", "127.0.0.1"],
+  "export_dir": "~/Documents/Job Applications",
+  "timezone": "America/Vancouver",
+  "intake_job_id": "",
+  "seeker_profile": "The job seeker: based in Vancouver, BC; BSc in Computer Science; 4 years of software experience; wants software developer, QA and IT support roles, remote in Canada or hybrid in Metro Vancouver; expects about CAD 70-85K; junior to intermediate level only.",
+  "resume": {
+    "years_phrase": "4+ years of experience",
+    "employer_phrase": "Example Studio",
+    "profile_files": ["profile.md"],
+    "degree_rewrite": ["Computing Science", "Computer Science"],
+    "banned_claims": [
+      ["spring\\s*boot", "Spring Boot"],
+      ["\\bJUnit\\b", "JUnit"],
+      ["azure", "Azure"]
+    ],
+    "software_roles": [
+      ["Acme Robotics", "Vancouver, BC", "Jan 2024 – Present (2 years)"],
+      ["Example Studio", "Burnaby, BC", "Jun 2021 – Dec 2023 (2 years, 7 months)"]
+    ],
+    "odd_jobs_roles": ["Barista, Corner Cafe, Vancouver, BC"],
+    "writer_notes": [
+      "The summary also says you run Example Studio and that most of your work is contract work."
+    ]
+  }
+}

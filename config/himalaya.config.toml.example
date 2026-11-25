@@ -1,0 +1,16 @@
+# Copy to ~/.config/himalaya/config.toml, replace YOU@gmail.com, then chmod 600.
+# READ-ONLY by design: no [smtp] settings, so the agent cannot send mail.
+# The app password lives in a separate 600 file, never in this file or in chat.
+#   mkdir -p ~/.hermes/secrets && chmod 700 ~/.hermes/secrets
+#   (paste the 16-char Google app password, no spaces)  install -m 600 /dev/stdin ~/.hermes/secrets/gmail_app_password
+
+[accounts.jobs]
+default = true
+email = "YOU@gmail.com"
+
+imap.server = "imap.gmail.com"            # implicit TLS on 993
+imap.sasl.plain.username = "YOU@gmail.com"
+imap.sasl.plain.password.command = "cat ~/.hermes/secrets/gmail_app_password"
+
+envelope.list.page-size = 100
+mailbox.alias.inbox = "INBOX"
